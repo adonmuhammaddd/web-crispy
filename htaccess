@@ -1,0 +1,41 @@
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+RewriteOptions inherit
+<IfModule mod_rewrite.c>
+
+        Options +FollowSymLinks
+        RewriteEngine on
+
+        # Send request via index.php (again, not if its a real file or folder)
+
+        <IfModule mod_php5.c>
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteCond %{REQUEST_FILENAME} !-d
+                RewriteRule ^(.*)$ index.php/$1 [L]
+        </IfModule>                                     
+
+        <IfModule !mod_php5.c>
+                RewriteRule ^(.*)$ index.php?/$1 [L]
+        </IfModule>
+
+</IfModule> 
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    RewriteCond %{REQUEST_URI} ^system.*
+    RewriteRule ^(.*)$ /index.php?/$1 [L]
+
+    RewriteCond %{REQUEST_URI} ^application.*
+    RewriteRule ^(.*)$ /index.php?/$1 [L]
+
+    RewriteCond %{REQUEST_URI} ^asset.*
+    RewriteRule ^(.*)$ /index.php?/$1 [L]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>
+
